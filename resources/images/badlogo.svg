@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg
+   width="1000"
+   height="1000"
+   viewBox="0 0 1000 1000"
+   fill="none"
+   version="1.1"
+   id="svg96"
+   sodipodi:docname="badlogo.svg"
+   inkscape:version="1.2.2 (b0a8486541, 2022-12-01)"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg">
+  <defs
+     id="defs100" />
+  <sodipodi:namedview
+     id="namedview98"
+     pagecolor="#ffffff"
+     bordercolor="#000000"
+     borderopacity="0.25"
+     inkscape:showpageshadow="2"
+     inkscape:pageopacity="0.0"
+     inkscape:pagecheckerboard="0"
+     inkscape:deskcolor="#d1d1d1"
+     showgrid="false"
+     inkscape:zoom="0.26097034"
+     inkscape:cx="208.83599"
+     inkscape:cy="668.65836"
+     inkscape:window-width="1920"
+     inkscape:window-height="1056"
+     inkscape:window-x="0"
+     inkscape:window-y="24"
+     inkscape:window-maximized="1"
+     inkscape:current-layer="svg96" />
+  <mask
+     id="path-3-inside-1_0_1"
+     fill="#ffffff">
+    <rect
+       x="312"
+       y="769"
+       width="423"
+       height="89"
+       rx="13"
+       id="rect75" />
+  </mask>
+  <rect
+     x="312"
+     y="769"
+     width="423"
+     height="89"
+     rx="13"
+     stroke="#404040"
+     stroke-width="50"
+     mask="url(#path-3-inside-1_0_1)"
+     id="rect78"
+     transform="translate(-26.572042,-86.237305)" />
+  <path
+     d="m 861.42796,503.7627 c 0,241.417 -166.028,432 -365,432 -198.972,0 -365,-190.583 -365,-432 0,-241.417 166.028,-432.000005 365,-432.000005 198.972,0 365,190.583005 365,432.000005 z"
+     stroke="#404040"
+     stroke-width="36"
+     id="path80" />
+  <path
+     d="m 846.24696,351.9317 c 1.981,10.404 -4.514,23.915 -22.365,37.438 -17.351,13.145 -43.272,24.43 -73.675,30.219 -30.403,5.788 -58.657,4.819 -79.625,-1.031 -21.571,-6.017 -32.577,-16.195 -34.558,-26.6 -1.981,-10.405 4.515,-23.916 22.365,-37.439 17.351,-13.145 43.272,-24.43 73.675,-30.218 30.403,-5.789 58.658,-4.819 79.625,1.03 21.571,6.017 32.577,16.196 34.558,26.601 z"
+     stroke="#404040"
+     stroke-width="18"
+     id="path82" />
+  <path
+     d="m 356.24696,391.9577 c -1.981,10.405 -12.987,20.583 -34.557,26.601 -20.968,5.849 -49.223,6.818 -79.626,1.03 -30.402,-5.789 -56.324,-17.074 -73.675,-30.219 -17.85,-13.523 -24.346,-27.034 -22.365,-37.438 1.981,-10.405 12.987,-20.584 34.558,-26.601 20.968,-5.849 49.222,-6.819 79.625,-1.03 30.403,5.788 56.324,17.073 73.676,30.218 17.85,13.523 24.345,27.034 22.364,37.439 z"
+     stroke="#404040"
+     stroke-width="18"
+     id="path84" />
+  <path
+     d="m 450.25196,557.2627 46.676,-171.271 46.676,171.271 z"
+     stroke="#404040"
+     stroke-width="18"
+     id="path86" />
+</svg>
