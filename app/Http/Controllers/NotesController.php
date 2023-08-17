@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Notes;
+use App\Models\Komote;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
@@ -19,10 +20,12 @@ class NotesController extends Controller
     {
         $userID = Auth::id();
         $allNotes = Notes::all()->where('user_id', $userID);
-        $selectedNote = Notes::orderBy('updated_at', 'desc')->first();
+        $selectedNote = $allNotes->where('user_id', $userID)->sortByDesc('updated_at')->first();
+        $userKomote = Komote::all()->where('user_id', $userID)->first(); 
         return Inertia::render('Dashboard', [
             'allNotes' => $allNotes,
             'selectedNote' => $selectedNote,
+            'userKomote' => $userKomote
         ]);
     }
 
@@ -56,7 +59,8 @@ class NotesController extends Controller
         $userID = Auth::id();
         $allNotes = Notes::all()->where('user_id', $userID);
         $selectedNote = $allNotes->where('id', $slug)->first();
-        return Inertia::render('Dashboard', ['allNotes' => $allNotes, 'selectedNote' => $selectedNote]);
+        $userKomote = Komote::all()->where('user_id', $userID)->first(); 
+        return Inertia::render('Dashboard', ['allNotes' => $allNotes, 'selectedNote' => $selectedNote, 'userKomote' => $userKomote]);
     }
 
     /**
@@ -70,16 +74,15 @@ class NotesController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, $notes)
+    public function update(Request $request, $noteID)#: RedirectResponse
     {
-        $selectedNote = Notes::find($notes);
+        $selectedNote = Notes::find($noteID);
         $this->authorize('update', $selectedNote);
-
         $validated = $request->validate([
             'content' => '',
             'name' =>'required|string|max:20',
+            'canvas' => ''
         ]);
-
         $selectedNote->update($validated);
         return(redirect(route('notes.index')));
     }

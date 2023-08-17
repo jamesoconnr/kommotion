@@ -2,7 +2,7 @@
 
 namespace App\Listeners;
 
-use App\Events\Registered;
+use Illuminate\Auth\Events\Registered;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Queue\InteractsWithQueue;
 
@@ -21,11 +21,10 @@ class CreateKomote
     /**
      * Handle the event.
      */
-    public function handle(Registered $event): void
+    public function handle(Registered $event)#: void
     {
         $komote = new Komote();
         $komote->user_id = $event->user->id;
-        $komote->content = 'Initial komote content';
         $komote->save();
     }
 }

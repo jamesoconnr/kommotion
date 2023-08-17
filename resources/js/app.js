@@ -5,8 +5,13 @@ import { createApp, h } from 'vue';
 import { createInertiaApp } from '@inertiajs/vue3';
 import { resolvePageComponent } from 'laravel-vite-plugin/inertia-helpers';
 import { ZiggyVue } from '../../vendor/tightenco/ziggy/dist/vue.m';
+/* import the fontawesome core */
+import { library } from '@fortawesome/fontawesome-svg-core'
 
-const appName = import.meta.env.VITE_APP_NAME || 'Laravel';
+/* import font awesome icon component */
+import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
+
+const appName = import.meta.env.VITE_APP_NAME || 'Kommotion';
 
 
 createInertiaApp({
@@ -15,6 +20,7 @@ createInertiaApp({
     setup({ el, App, props, plugin }) {
         return createApp({ render: () => h(App, props) })
             .use(plugin)
+            .component('font-awesome-icon', FontAwesomeIcon)
             .use(ZiggyVue, Ziggy)
             .mount(el);
     },

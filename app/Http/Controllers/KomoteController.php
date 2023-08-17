@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Komote;
 use Illuminate\Http\Request;
+use Inertia\Inertia;
 
 class KomoteController extends Controller
 {
@@ -50,9 +51,17 @@ class KomoteController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Komote $komote)
+    public function update(Request $request, $komoteID)
     {
-        //
+        $selectedKomote = Komote::find($komoteID);
+        $this->authorize('update', $selectedKomote);
+
+        $validated = $request->validate([
+            'content' => '',
+        ]);
+
+        $selectedKomote->update($validated);
+        #return Inertia::render('test', ['test' => $komoteID]);
     }
 
     /**

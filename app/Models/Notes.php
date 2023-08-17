@@ -11,7 +11,8 @@ class Notes extends Model
     use HasFactory;
     protected $fillable = [
         'name',
-        'content'
+        'content',
+        'canvas'
     ];
     
     public function user(): BelongsTo

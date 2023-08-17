@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\KomoteController;
 use App\Http\Controllers\NotesController;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Foundation\Application;
@@ -37,9 +38,17 @@ Route::middleware('auth')->group(function () {
 });
 
 Route::resource('notes', NotesController::class)
-    ->only(['index', 'store', 'update', 'destroy', 'show', 'put'])
+    ->only(['index', 'store', 'update', 'destroy', 'show'])
     ->middleware(['auth']);
 
 Route::get('/notes/{slug}', [NotesController::class, 'show']);
+
+Route::resource('komote', KomoteController::class)
+    ->only(['update'])
+    ->middleware(['auth']);
+
+    /*probably vey bad */
+Route::get('/logout', 'Auth\LoginController@logout');
+
 
 require __DIR__.'/auth.php';
