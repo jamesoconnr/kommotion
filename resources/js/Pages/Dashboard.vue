@@ -199,6 +199,11 @@ const handleKeybind = (event) => {
     }
 }
 
+const newNote = () => {
+    newNoteForm.post(route('notes.store'))
+    document.location.reload()
+}
+
 </script>
 
 <template>
@@ -220,6 +225,7 @@ const handleKeybind = (event) => {
         </div>
         <div class="bg-neutral-200 p-5 flex flex-col gap-5">
             <h2 class="font-bold text-4xl text-neutral-700">{{ userName }}{{ apostrophe }}<br>stuff</h2>
+            <a href="/logout">logout</a>
             <div class="bg-neutral-500 h-[1px]"></div>
             <ul class="flex flex-col-reverse gap-3 pl-5 [&>*]:font-bold  [&>*]:text-neutral-600">
                 <Link :href="`/notes/${note.id}`" v-for="note in allNotes">{{ note.name }}</Link>
@@ -235,7 +241,7 @@ const handleKeybind = (event) => {
                         <li class="list-item">Create unordered list: Control +  l</li>
                     </ul>
                 </div>
-            <form class="flex gap-4" @submit.prevent="newNoteForm.post(route('notes.store'))">
+            <form class="flex gap-4" @submit.prevent="newNote">
                 <input type="text" v-model="newNoteForm.name" class=" w-full">
                 <button class="text-3xl select-none" >+</button>
             </form>

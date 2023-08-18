@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\KomoteController;
+use App\Http\Controllers\Auth\AuthenticatedSessionController;
 use App\Http\Controllers\NotesController;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Foundation\Application;
@@ -27,9 +28,9 @@ Route::get('/', function () {
     ]);
 });
 
-Route::get('/dashboard', function () {
-    return Inertia::render('Dashboard');
-})->middleware(['auth'])->name('dashboard');
+Route::get('/notes', function () {
+    return redirect(route('notes.index'));
+})->middleware(['auth'])->name('notes');
 
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
@@ -47,8 +48,6 @@ Route::resource('komote', KomoteController::class)
     ->only(['update'])
     ->middleware(['auth']);
 
-    /*probably vey bad */
-Route::get('/logout', 'Auth\LoginController@logout');
-
+Route::get('/logout', [AuthenticatedSessionController::class, 'logout']);
 
 require __DIR__.'/auth.php';

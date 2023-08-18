@@ -10,7 +10,6 @@ use Inertia\Inertia;
 use Inertia\Response;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
-
 class NotesController extends Controller
 {
     /**
@@ -21,11 +20,11 @@ class NotesController extends Controller
         $userID = Auth::id();
         $allNotes = Notes::all()->where('user_id', $userID);
         $selectedNote = $allNotes->where('user_id', $userID)->sortByDesc('updated_at')->first();
-        $userKomote = Komote::all()->where('user_id', $userID)->first(); 
+        $userKomote = Komote::all()->where('user_id', $userID)->first();
         return Inertia::render('Dashboard', [
             'allNotes' => $allNotes,
             'selectedNote' => $selectedNote,
-            'userKomote' => $userKomote
+            'userKomote' => $userKomote,
         ]);
     }
 
