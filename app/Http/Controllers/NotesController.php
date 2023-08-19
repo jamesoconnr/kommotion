@@ -15,6 +15,10 @@ class NotesController extends Controller
     /**
      * Display a listing of the resource.
      */
+    public function __construct()
+    {
+        $this->middleware('throttle:notes');
+    }
     public function index()
     {
         $userID = Auth::id();
@@ -47,6 +51,7 @@ class NotesController extends Controller
  
         $request->user()->notes()->create($validated);
  
+        #return Inertia::render('test');
         return redirect(route('notes.index'));
     }
 
@@ -73,7 +78,7 @@ class NotesController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, $noteID)#: RedirectResponse
+    public function update(Request $request, $noteID): RedirectResponse
     {
         $selectedNote = Notes::find($noteID);
         $this->authorize('update', $selectedNote);

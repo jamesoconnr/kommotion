@@ -28,6 +28,16 @@ class RouteServiceProvider extends ServiceProvider
             return Limit::perMinute(60)->by($request->user()?->id ?: $request->ip());
         });
 
+        RateLimiter::for('notes', function (Request $request) {
+            return Limit::perMinute(30)->response(function (Request $request, array $headers) {
+                return response('429 Too Many Requests', 429, $headers);
+            });
+        });
+
+        RateLimiter::for('komote', function (Request $request) {
+            return Limit::perMinute(140);
+        });
+        
         $this->routes(function () {
             Route::middleware('api')
                 ->prefix('api')

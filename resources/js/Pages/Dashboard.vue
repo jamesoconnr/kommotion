@@ -75,7 +75,6 @@ const newNoteForm = useForm({
 const saveNote = () => {
     sessionSelectedNote.canvas = canvasRef.value.toDataURL()
     sessionSelectedNote.put(route('notes.update', sessionSelectedNote.id))
-    /*sessionSelectedNote.put(route('notes.update', sessionSelectedNote.id))*/
 }
 
 /* motion for komote */
@@ -160,6 +159,11 @@ onMounted(() => {
 
     canvas.width = canvas.offsetWidth
     canvas.height = canvas.offsetHeight
+    try {
+        resizeTextarea()
+    } catch (error) {
+        
+    }
 
 });
 
@@ -201,7 +205,6 @@ const handleKeybind = (event) => {
 
 const newNote = () => {
     newNoteForm.post(route('notes.store'))
-    document.location.reload()
 }
 
 </script>
@@ -225,23 +228,35 @@ const newNote = () => {
         </div>
         <div class="bg-neutral-200 p-5 flex flex-col gap-5">
             <h2 class="font-bold text-4xl text-neutral-700">{{ userName }}{{ apostrophe }}<br>stuff</h2>
-            <a href="/logout">logout</a>
+            <a href="/logout" class="font-bold text-neutral-600">logout</a>
             <div class="bg-neutral-500 h-[1px]"></div>
             <ul class="flex flex-col-reverse gap-3 pl-5 [&>*]:font-bold  [&>*]:text-neutral-600">
                 <Link :href="`/notes/${note.id}`" v-for="note in allNotes">{{ note.name }}</Link>
             </ul>
             <span @click="showHelp = !showHelp" class="font-bold text-neutral-700 mt-auto underline underline-offset-3 text-sm">how do i use kommotion?</span>
-                <div v-if="showHelp" class="p-10 font-bold text-neutral-600 absolute z-30 h-2/3 bg-neutral-300 rounded-xl top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
-                    <h3 class="underline">Making a note:</h3>
+                <div v-if="showHelp" class="p-10 font-medium-neutral-600 absolute z-30 h-2/3 bg-neutral-300 rounded-xl top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 flex flex-col gap-1">
+                    <h3 class="underline font-bold">Making a note:</h3>
                         <p>Type your note name in the bottom left of the screen and click the + to the right of the name input.</p>
-                    <h3 class="underline">Editing & saving a note:</h3>
-                        <p>Both the title and </p>
-                    <h3 class="mb-2 underline">Keybinds:</h3>
-                    <ul class="ml-3">
-                        <li class="list-item">Create unordered list: Control +  l</li>
-                    </ul>
+                    <h3 class="underline font-bold">Editing & saving a note:</h3>
+                        <p>Both the title and note can be edited by simply clicking on them. The user can toggle drawing mode by clicking on the brush icon. The eye-slash icon toggles the canvas' visibility, but makes no change to its content. The trash icon clears the canvas.<br>A note's title, content, and canvas are all saved with click of the gray save button. At the time being there is <span class="underline">no autosave for notes.</span></p>
+                    <h3 class="underline font-bold">Editing & "saving" a Komote:</h3>
+                        <p>The komote is edited by simply clicking and typing. Unlike notes, they are entirely auto-saved. The komote can be dragged anywhere in the window and the content is the same in all notes.</p>
+                    <h3 class="underline font-bold mt-auto">Upcoming Features:</h3>
+                        <ul class="ml-5">
+                            <li>-Deleting notes</li>
+                            <li>-Better auto-save for komote that doesn't hit the rate limit</li>
+                            <li>-More efficient storage of the canvas</li>
+                            <li>-Lists, bold text, underlines, and italics within notes</li>
+                        </ul>
+                    <h3 class="underline font-bold mt-auto">Contact the dev:</h3>
+                        <a href="mailto:jamesdoconnor2@gmail.com">jamesdoconnor2@gmail.com</a>
+                        <a href="https://github.com/jamesoconnr">github.com/jamesoconnr</a>
                 </div>
-            <form class="flex gap-4" @submit.prevent="newNote">
+            <form v-if="sessionSelectedNote.id" class="flex gap-4" @submit.prevent="newNote">
+                <input type="text" v-model="newNoteForm.name" class=" w-full">
+                <button class="text-3xl select-none" >+</button>
+            </form>
+            <form v-else class="flex gap-4" @submit="newNote">
                 <input type="text" v-model="newNoteForm.name" class=" w-full">
                 <button class="text-3xl select-none" >+</button>
             </form>
@@ -265,7 +280,7 @@ const newNote = () => {
                         ></div>
                         <textarea ref="note" name='note'
                             class="scrollbar border-0 bg-transparent resize-none outline-none text-xl font-extrabold text-neutral-600 remove-shadow w-full h-full"
-                            v-html="sessionSelectedNote.content"
+                            v-model="sessionSelectedNote.content"
                             placeholder="Write something..."
                             @keydown.tab=""
                         ></textarea>

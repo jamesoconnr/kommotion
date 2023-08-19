@@ -42,7 +42,6 @@ Route::resource('notes', NotesController::class)
     ->only(['index', 'store', 'update', 'destroy', 'show'])
     ->middleware(['auth']);
 
-Route::get('/notes/{slug}', [NotesController::class, 'show']);
 
 Route::resource('komote', KomoteController::class)
     ->only(['update'])
