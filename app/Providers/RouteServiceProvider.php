@@ -29,13 +29,13 @@ class RouteServiceProvider extends ServiceProvider
         });
 
         RateLimiter::for('notes', function (Request $request) {
-            return Limit::perMinute(30)->response(function (Request $request, array $headers) {
+            return Limit::perMinute(60)->response(function (Request $request, array $headers) {
                 return response('429 Too Many Requests', 429, $headers);
             });
         });
 
         RateLimiter::for('komote', function (Request $request) {
-            return Limit::perMinute(140);
+            return Limit::perMinute(200);
         });
         
         $this->routes(function () {
