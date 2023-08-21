@@ -210,6 +210,11 @@ const handleKeybind = (event) => {
 const newNote = () => {
     newNoteForm.post(route('notes.store'))
 }
+// truly a very bad solution. other solutions worked for me but never in production
+const firstNewNote = () => {
+    newNoteForm.post(route('notes.store'))
+    location.reload()
+}
 
 </script>
 
@@ -242,7 +247,7 @@ const newNote = () => {
             </ul>
             <span @click="showHelp = !showHelp" class="font-bold text-neutral-700 mt-auto underline underline-offset-3 text-sm mb-0 select-none">how do i use kommotion?</span>
             <div v-if="showHelp" class="p-10 font-medium-neutral-600 absolute z-30 min-h-2/3 bg-neutral-300 rounded-xl top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 flex flex-col gap-1 text-sm">
-                <span class="p-1 text-lg font-extrabold text-red-500 ml-auto select-none hover:cursor-pointer border border-red-400 border-2 leading-none" @click="showHelp = !showHelp">X</span>
+                <!-- <span class="p-1 text-lg font-extrabold text-red-500 ml-auto select-none hover:cursor-pointer border border-red-400 border-2 leading-none" @click="showHelp = !showHelp">X</span> -->
                 <h3 class="underline font-bold">Making a note:</h3>
                     <p>Type your note name in the bottom left of the screen and click the + to the right of the name input. <span class="underline">If the first note you make on a new account doesn't appear, please refresh the page.</span></p>
                 <h3 class="underline font-bold">Editing & saving a note:</h3>
@@ -265,7 +270,7 @@ const newNote = () => {
                 <input type="text" v-model="newNoteForm.name" class=" w-full">
                 <button class="text-3xl select-none" >+</button>
             </form>
-            <form v-else class="flex gap-4" @submit="newNote">
+            <form v-else class="flex gap-4" @submit="firstNewNote">
                 <input type="text" v-model="newNoteForm.name" class=" w-full">
                 <button class="text-3xl select-none" >+</button>
             </form>
