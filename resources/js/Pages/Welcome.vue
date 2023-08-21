@@ -11,7 +11,7 @@ import ApplicationLogo from '@/Components/ApplicationLogo.vue';
             <div class="font-medium text-5xl"><b>Kommotion</b><br>is notion for the<br>
                 <h1 class="font-semibold">less organized</h1>
             </div>
-            <img class="w-2/5" src='https://dummyimage.com/500x250.png' alt='' />
+            <img class="w-3/5"  src="../../images/WelcomeDemoScreenShot.png" alt='' />
             <div class="flex gap-10 mx-auto">
                 <Link :href="route('notes.index')" class="font-bold text-gray-600 underline underline-offset-2 text-xl">try it out</Link>
             </div>

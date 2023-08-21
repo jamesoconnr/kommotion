@@ -6,6 +6,8 @@ use App\Models\Notes;
 use App\Models\Komote;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\Storage;
 use Inertia\Inertia;
 use Inertia\Response;
 use Illuminate\Support\Facades\DB;
@@ -25,10 +27,16 @@ class NotesController extends Controller
         $allNotes = Notes::all()->where('user_id', $userID);
         $selectedNote = $allNotes->where('user_id', $userID)->sortByDesc('updated_at')->first();
         $userKomote = Komote::all()->where('user_id', $userID)->first();
+        if ($selectedNote != null){
+            $canvasPath = $selectedNote['canvas'];
+        } else {
+            $canvasPath = null;
+        }
         return Inertia::render('Dashboard', [
             'allNotes' => $allNotes,
             'selectedNote' => $selectedNote,
             'userKomote' => $userKomote,
+            'canvasImg' => $canvasPath,
         ]);
     }
 
@@ -51,7 +59,6 @@ class NotesController extends Controller
  
         $request->user()->notes()->create($validated);
  
-        #return Inertia::render('test');
         return redirect(route('notes.index'));
     }
 
@@ -80,22 +87,39 @@ class NotesController extends Controller
      */
     public function update(Request $request, $noteID): RedirectResponse
     {
+        $userID = Auth::id();
         $selectedNote = Notes::find($noteID);
+        //$carbonCurrentTime = Carbon::now();
+        //$currentTime = str_replace(' ', '_', $carbonCurrentTime);
+
+        $canvasDataURL = $request['canvas'];
+        list($type, $data) = explode(';', $canvasDataURL);
+        list(, $data)      = explode(',', $data);
+        $canvas = base64_decode($data);
+        Storage::disk('public')->put('canvas/' . $userID . '/canvas.png', $canvas);
+        $canvasStorageLocation = asset('/storage/canvas/' . $userID . '/canvas.png');
+        
         $this->authorize('update', $selectedNote);
         $validated = $request->validate([
             'content' => '',
             'name' =>'required|string|max:20',
-            'canvas' => ''
         ]);
+        $validated['canvas'] = $canvasStorageLocation;
+
         $selectedNote->update($validated);
+        
         return(redirect(route('notes.index')));
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Notes $notes)
+    public function destroy(Notes $notes): RedirectResponse
     {
-        //
+        $this->authorize('delete', $notes);
+        //$this->authorize('delete', $chirp);
+        $notes->delete();
+        //$chirp->delete();
+        //return redirect(route('chirps.index'));
     }
 }

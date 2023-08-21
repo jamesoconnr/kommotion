@@ -10,7 +10,7 @@ import FATrashIcon from '@/Components/FATrashIcon.vue'
 import { onMounted } from 'vue';
 import { faL } from '@fortawesome/free-solid-svg-icons';
 
-const props = defineProps(['auth', 'allNotes', 'selectedNote', 'userKomote']);
+const props = defineProps(['auth', 'allNotes', 'selectedNote', 'userKomote', 'canvasImg']);
 
 const canvasRef = ref(null);
 const context = ref(null);
@@ -36,17 +36,20 @@ try {
         content: props.selectedNote.content,
         name: props.selectedNote.name,
         created_at: props.selectedNote.created_at,
-        canvas: props.selectedNote.canvas
+        canvas: props.selectedNote.canvas,
+        previousCanvas: props.canvasImg
     })
 } catch (e){
 
 }
 const createdAtUTC = sessionSelectedNote.created_at
+let createdAt = ''
 try {
-    const createdAt = (createdAtUTC.split('T')[0]).replace(/-/g, '/')
+    createdAt = (createdAtUTC.split('T')[0]).replace(/-/g, '/')
 } catch (error) {
     
 }
+
 
 const komoteForm = useForm({
     content: '',
@@ -73,7 +76,7 @@ const newNoteForm = useForm({
 })
 
 const saveNote = () => {
-    //sessionSelectedNote.canvas = canvasRef.value.toDataURL()
+    sessionSelectedNote.canvas = canvasRef.value.toDataURL()
     sessionSelectedNote.put(route('notes.update', sessionSelectedNote.id))
 }
 
@@ -112,7 +115,7 @@ const resizeTextarea = () => {
 
 /* Drawing on note */
 
-let pngDataUrl = sessionSelectedNote.canvas // Replace with your PNG data URL
+let pngDataUrl = sessionSelectedNote.previousCanvas
 let img = new Image();
 img.src = pngDataUrl;
 img.onload = (() => {
@@ -131,6 +134,7 @@ const setColor = (color) => {
 
 /*set stroke size*/
 const increaseSize = () => {
+    console.log(sessionSelectedNote.previousCanvas)
     if (strokeWidth.value <= 15) {
         strokeWidth.value = ++strokeWidth.value
     } 
@@ -231,28 +235,32 @@ const newNote = () => {
             <a href="/logout" class="font-bold text-neutral-600">logout</a>
             <div class="bg-neutral-500 h-[1px]"></div>
             <ul class="flex flex-col-reverse gap-3 pl-5 [&>*]:font-bold  [&>*]:text-neutral-600">
-                <Link :href="`/notes/${note.id}`" v-for="note in allNotes">{{ note.name }}</Link>
+                <Link
+                    :href="`/notes/${note.id}`"
+                    v-for="note in allNotes">
+                    {{ note.name }}</Link>
             </ul>
-            <span @click="showHelp = !showHelp" class="font-bold text-neutral-700 mt-auto underline underline-offset-3 text-sm">how do i use kommotion?</span>
-                <div v-if="showHelp" class="p-10 font-medium-neutral-600 absolute z-30 min-h-2/3 bg-neutral-300 rounded-xl top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 flex flex-col gap-1 text-sm">
-                    <h3 class="underline font-bold">Making a note:</h3>
-                        <p>Type your note name in the bottom left of the screen and click the + to the right of the name input.</p>
-                    <h3 class="underline font-bold">Editing & saving a note:</h3>
-                        <p>Both the title and note can be edited by simply clicking on them. The user can toggle drawing mode by clicking on the brush icon. The eye-slash icon toggles the canvas' visibility, but makes no change to its content. The trash icon clears the canvas.<br>A note's title content are all saved with click of the gray save button. At the time being there is <span class="underline">no autosave for notes and the canvas cannot be saved at all.</span></p>
-                    <h3 class="underline font-bold">Editing & "saving" a Komote:</h3>
-                        <p>The komote is edited by simply clicking and typing. Unlike notes, they are entirely auto-saved. The komote can be dragged anywhere in the window and the content is the same in all notes.</p>
-                    <h3 class="underline font-bold mt-auto">Upcoming Features:</h3>
-                        <ul class="ml-5">
-                            <li>-Saving a note's canvas</li>
-                            <li>-Deleting notes</li>
-                            <li>-Better auto-save for komote that doesn't hit the rate limit</li>
-                            <li>-More efficient storage of the canvas</li>
-                            <li>-Lists, bold text, underlines, and italics within notes</li>
-                        </ul>
-                    <h3 class="underline font-bold mt-auto">Contact the dev:</h3>
-                        <a href="mailto:jamesdoconnor2@gmail.com">jamesdoconnor2@gmail.com</a>
-                        <a href="https://github.com/jamesoconnr">github.com/jamesoconnr</a>
-                </div>
+            <span @click="showHelp = !showHelp" class="font-bold text-neutral-700 mt-auto underline underline-offset-3 text-sm mb-0 select-none">how do i use kommotion?</span>
+            <div v-if="showHelp" class="p-10 font-medium-neutral-600 absolute z-30 min-h-2/3 bg-neutral-300 rounded-xl top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 flex flex-col gap-1 text-sm">
+                <span class="p-1 text-lg font-extrabold text-red-500 ml-auto select-none hover:cursor-pointer border border-red-400 border-2 leading-none" @click="showHelp = !showHelp">X</span>
+                <h3 class="underline font-bold">Making a note:</h3>
+                    <p>Type your note name in the bottom left of the screen and click the + to the right of the name input. <span class="underline">If the first note you make on a new account doesn't appear, please refresh the page.</span></p>
+                <h3 class="underline font-bold">Editing & saving a note:</h3>
+                    <p>Both the title and note can be edited by clicking on their respective fields. The user can toggle drawing mode by clicking on the "drawing on/off" text at the top of the toolbar. The eye-slash icon toggles the canvas' visibility, but makes no change to its content. The trash icon clears the canvas.<br>A note's title content are all saved with click of the gray save button. At the time being there is <span class="underline">no autosave for notes.</span></p>
+                <h3 class="underline font-bold">Editing & "saving" a Komote:</h3>
+                    <p>The komote is edited by simply clicking and typing. Unlike notes, they are entirely auto-saved. The komote can be dragged anywhere in the window and the content is the same in all notes.</p>
+                <h3 class="underline font-bold mt-auto">Upcoming Features:</h3>
+                    <ul class="ml-5">
+                        <li>-Deleting notes</li>
+                        <li>-A better logo</li>
+                        <li>-Better auto-save for komote that doesn't hit the rate limit</li>
+                        <li>-More efficient storage of the canvas</li>
+                        <li>-Lists, bold text, underlines, and italics within notes</li>
+                    </ul>
+                <h3 class="underline font-bold mt-auto">Contact the dev:</h3>
+                    <a href="mailto:jamesdoconnor2@gmail.com">jamesdoconnor2@gmail.com</a>
+                    <a href="https://github.com/jamesoconnr">github.com/jamesoconnr</a>
+            </div>
             <form v-if="sessionSelectedNote.id" class="flex gap-4" @submit.prevent="newNote">
                 <input type="text" v-model="newNoteForm.name" class=" w-full">
                 <button class="text-3xl select-none" >+</button>
@@ -280,7 +288,7 @@ const newNote = () => {
                             class="absolute top-0 left-0 bg-transparent w-full h-full"
                         ></div>
                         <textarea ref="note" name='note'
-                            class="scrollbar border-0 bg-transparent resize-none outline-none text-xl font-extrabold text-neutral-600 remove-shadow w-full h-full"
+                            class="scrollbar border-1 border-neutral-200 rounded-xl bg-transparent resize-none outline-none text-xl font-bold text-neutral-600 remove-shadow w-full h-full p-5"
                             v-model="sessionSelectedNote.content"
                             placeholder="Write something..."
                             @keydown.tab=""
@@ -294,12 +302,17 @@ const newNote = () => {
             </form>
             <div 
                 :class="{'bg-neutral-300 scale-95': showCanvas }"
-                class="hover:cursor-pointer transition-transform absolute right-0 bottom-10 bg-neutral-200 p-3 rounded-xl flex flex-col gap-3 items-center"
+                class="hover:cursor-pointer transition-transform absolute right-0 bottom-10 bg-neutral-200 p-3 rounded-xl flex flex-col gap-3 items-center z-20"
             >
-                <FABrushIcon @click="toggleDrawingMode" class="transition-transform hover:scale-90 h-5 fill-neutral-600"/>
+                <div  @click="toggleDrawingMode" class="font-bold text-neutral-700 flex flex-col items-center text-xs">
+                    <span>Drawing</span>
+                    <span class="text-red-500" v-if="showCanvas">On</span>
+                    <span class="" v-else>Off</span>
+                </div>
                 <div class="bg-neutral-500 h-[1px] w-2/3"></div>
+                <FABrushIcon @click="setColor('#A3A3A3')" class="{transition-transform hover:scale-90 h-5 fill-neutral-600" :class="{'outline outline-offset-2 outline-2 outline-neutral-600 scale-90 rounded-xl': strokeColor != '#f5f5f5' }"/>
+                <FAEraserIcon :class="{'outline outline-offset-2 outline-2 outline-neutral-600 scale-90 rounded-xl': strokeColor === '#f5f5f5' }" @click="setColor('#f5f5f5')" class="transition-transform hover:scale-90 h-5 fill-neutral-600" />
                 <FAEyeSlash @click="toggleCanvasDisplay" :class="{'fill-red-500': !canvasDisplay}" class="transition-transform hover:scale-90 h-5 fill-neutral-600" />
-                <FAEraserIcon :class="{'outline outline-offset-2 outline-1 outline-neutral-600 scale-90 rounded-xl': strokeColor === '#f5f5f5' }" @click="setColor('#f5f5f5')" class="transition-transform hover:scale-90 h-5 fill-neutral-600" />
                 <FATrashIcon @click="clearCanvas" class="transition-transform hover:scale-90 h-5 fill-neutral-600">f</FATrashIcon>
                 <div class="bg-neutral-500 h-[1px] w-2/3"></div>
                 <div :class="{'outline outline-offset-2 outline-1 outline-neutral-600 scale-90': strokeColor === '#525252' }" @click="setColor('#525252')" class="transition-all hover:scale-90 h-5 w-5 rounded-full bg-neutral-600"></div>
@@ -326,6 +339,7 @@ body{
 }
 .remove-shadow:focus{
     box-shadow: none !important;
+    border-color: inherit;
 }
 .scrollbar{
     scrollbar-color: var(--bg-neutral-600);
