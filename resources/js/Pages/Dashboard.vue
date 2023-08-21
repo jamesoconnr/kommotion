@@ -10,7 +10,7 @@ import FATrashIcon from '@/Components/FATrashIcon.vue'
 import { onMounted } from 'vue';
 import { faL } from '@fortawesome/free-solid-svg-icons';
 
-const props = defineProps(['auth', 'allNotes', 'selectedNote', 'userKomote', 'canvasImg']);
+const props = defineProps(['auth', 'allNotes', 'selectedNote', 'userKomote', 'canvasImg', 'test']);
 
 const canvasRef = ref(null);
 const context = ref(null);
@@ -27,7 +27,8 @@ let sessionSelectedNote = useForm({
     content: null,
     name: null,
     created_at: null,
-    canvas: null
+    canvas: null,
+    previousCanvas: null
 })
 
 try {
@@ -39,6 +40,7 @@ try {
         canvas: props.selectedNote.canvas,
         previousCanvas: props.canvasImg
     })
+    console.log(props.test)
 } catch (e){
 
 }
@@ -99,8 +101,7 @@ onMounted(() => {
     document.addEventListener('mouseup', () =>{
         komoteHeader.removeEventListener('mousemove', onDrag)
     })
-    
-    
+
 })
 /**/
 
@@ -114,7 +115,6 @@ const resizeTextarea = () => {
 
 
 /* Drawing on note */
-
 let pngDataUrl = sessionSelectedNote.previousCanvas
 let img = new Image();
 img.src = pngDataUrl;
@@ -134,7 +134,7 @@ const setColor = (color) => {
 
 /*set stroke size*/
 const increaseSize = () => {
-    console.log(sessionSelectedNote.previousCanvas)
+    console.log(sessionSelectedNote)
     if (strokeWidth.value <= 15) {
         strokeWidth.value = ++strokeWidth.value
     } 
@@ -242,7 +242,9 @@ const firstNewNote = () => {
             <ul class="flex flex-col-reverse gap-3 pl-5 [&>*]:font-bold  [&>*]:text-neutral-600">
                 <Link
                     :href="`/notes/${note.id}`"
-                    v-for="note in allNotes">
+                    v-for="note in allNotes"
+                    :class="{'underline': sessionSelectedNote.id === note.id }"
+                    >
                     {{ note.name }}</Link>
             </ul>
             <span @click="showHelp = !showHelp" class="font-bold text-neutral-700 mt-auto underline underline-offset-3 text-sm mb-0 select-none">how do i use kommotion?</span>
@@ -333,8 +335,9 @@ const firstNewNote = () => {
                 <span @click="decreaseSize" class="font-bold text-neutral-600 text-xl select-none">-</span>
             </div>
         </div>
-        <div v-else class="h-full p-5 flex">
-            <h1 class="font-bold text-5xl text-neutral-600 mt-auto">&lt;-Make your first note!</h1>
+        <div v-else class="h-full p-5 flex flex-col font-bold text-5xl text-neutral-600">
+            <h2 class="mt-auto text-xl">Please refresh the page if the first note doesn't appear!</h2>
+            <h1 class="">&lt;-Make your first note!</h1>
         </div>
     </main>
 </template>

@@ -70,8 +70,18 @@ class NotesController extends Controller
         $userID = Auth::id();
         $allNotes = Notes::all()->where('user_id', $userID);
         $selectedNote = $allNotes->where('id', $slug)->first();
-        $userKomote = Komote::all()->where('user_id', $userID)->first(); 
-        return Inertia::render('Dashboard', ['allNotes' => $allNotes, 'selectedNote' => $selectedNote, 'userKomote' => $userKomote]);
+        $userKomote = Komote::all()->where('user_id', $userID)->first();
+        if ($selectedNote != null){
+            $canvasPath = $selectedNote['canvas'];
+        } else {
+            $canvasPath = 'Not Found In Controller';
+        }
+        return Inertia::render('Dashboard', [
+            'allNotes' => $allNotes,
+            'selectedNote' => $selectedNote,
+            'userKomote' => $userKomote,
+            'canvasImg' => $canvasPath,
+        ]);
     }
 
     /**
@@ -96,8 +106,8 @@ class NotesController extends Controller
         list($type, $data) = explode(';', $canvasDataURL);
         list(, $data)      = explode(',', $data);
         $canvas = base64_decode($data);
-        Storage::disk('public')->put('canvas/' . $userID . '/canvas.png', $canvas);
-        $canvasStorageLocation = asset('/storage/canvas/' . $userID . '/canvas.png');
+        Storage::disk('public')->put('canvas/' . $userID . '/' . $noteID . '/canvas.png', $canvas);
+        $canvasStorageLocation = asset('/storage/canvas/' . $userID . '/' . $noteID . '/canvas.png');
         
         $this->authorize('update', $selectedNote);
         $validated = $request->validate([
